@@ -1,0 +1,3 @@
+bool cache_and_save   # true  = save+cache, false = one-shot
+---
+bool accepted         # always 'true' for now

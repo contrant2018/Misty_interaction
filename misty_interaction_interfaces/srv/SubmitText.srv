@@ -1,0 +1,4 @@
+# SubmitText.srv
+string text
+---
+bool accepted 
