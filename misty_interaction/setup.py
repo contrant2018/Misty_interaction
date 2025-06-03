@@ -14,7 +14,9 @@ setup(
     install_requires=[
         "coqui-tts[server]>=0.22.0",
         "soundfile",
-        "pydub"
+        "pydub",
+        'audio-common-msgs',
+        'PyAudio',
     ],
 
     zip_safe=True,
@@ -28,6 +30,7 @@ setup(
             'text_input_node = misty_interaction.TextInputNode:main',
             'gtts_tts_node = misty_interaction.gtts_tts_node:main',
             'tts_node = misty_interaction.TTSNode:main',
+            'mic_input_node = misty_interaction.MicInputNode:main',
         ],
     },
 )

@@ -24,6 +24,9 @@
   <exec_depend>coqui-tts</exec_depend>
   <exec_depend>soundfile</exec_depend>
   <exec_depend>pydub</exec_depend>
+
+  <exec_depend>audio_common_msgs</exec_depend>
+  <exec_depend>pyaudio</exec_depend>
   
   <!-- optional test deps -->
   <test_depend>ament_lint_auto</test_depend>

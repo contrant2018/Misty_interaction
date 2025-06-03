@@ -18,7 +18,7 @@ class TTSNode(Node):
         super().__init__('coqui_tts_node')
 
         # declaring parameters
-        self.declare_parameter('misty_ip', '192.168.1.100')
+        self.declare_parameter('misty_ip', '10.0.0.151')
         self.declare_parameter('tts_model', 'tts_models/en/ljspeech/vits')
         self.declare_parameter('vocoder_model', 'vocoder_models/en/ljspeech/hifigan_v2')
 
@@ -120,7 +120,7 @@ class TTSNode(Node):
         try:
             with open(mp3_path, 'rb') as f:
                 files = {'file': (mp3_path.name, f, 'audio/mpeg')}
-                r = requests.post(url, files=files, timeout=6)
+                r = requests.post(url, files=files, timeout=(3,20))
             if r.ok:
                 self.get_logger().debug(f'Sent {mp3_path.name} ({r.status_code})')
             else:

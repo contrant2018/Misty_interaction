@@ -16,7 +16,7 @@ class GTTSNode(Node):
         super().__init__('gtts_tts_node')
 
         # setting up perameter with misty info
-        self.declare_parameter('misty_ip', '192.168.1.100')   ### change to robot IP ###
+        self.declare_parameter('misty_ip', '10.0.0.151')   ### change to robot IP ###
 
         # setting up a language perameter
         self.declare_parameter('language', 'en')
