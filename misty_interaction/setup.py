@@ -1,4 +1,6 @@
 from setuptools import find_packages, setup
+import os
+from glob import glob
 
 package_name = 'misty_interaction'
 
@@ -10,6 +12,7 @@ setup(
         ('share/ament_index/resource_index/packages',
         ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        (os.path.join('share', package_name, 'launch'), glob('launch/*.py')),
     ],
     install_requires=[
         "coqui-tts[server]>=0.22.0",
@@ -29,8 +32,10 @@ setup(
         'console_scripts': [
             'text_input_node = misty_interaction.TextInputNode:main',
             'gtts_tts_node = misty_interaction.gtts_tts_node:main',
-            'tts_node = misty_interaction.TTSNode:main',
+            'TTSNode = misty_interaction.TTSNode:main',
+            'SendToMisty = misty_interaction.SendToMisty:main',
             'mic_input_node = misty_interaction.MicInputNode:main',
+            'misty_setup = misty_interaction.GeneralMistyTemp:main',
         ],
     },
 )
