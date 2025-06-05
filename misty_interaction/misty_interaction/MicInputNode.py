@@ -9,22 +9,22 @@ class MicInputNode(Node):
     def __init__(self):
         super().__init__('mic_input_node')
 
-        # ① parameters
+        #  parameters
         self.declare_parameter('sample_rate', 16000)
         self.declare_parameter('chunk_size',  4000)
         self.rate  = int(self.get_parameter('sample_rate').value)
         self.chunk = int(self.get_parameter('chunk_size').value)
 
-        # ② publisher
+        #  publisher
         self.pub = self.create_publisher(AudioData, '/mic_audio', 10)
 
-        # ③ queue + background capture thread
+        #  queue + background capture thread
         self._q = queue.Queue()
         self._stop = threading.Event()
         self._thread = threading.Thread(target=self._capture_loop, daemon=True)
         self._thread.start()
 
-        # ④ timer to flush queue into ROS messages
+        #  timer to flush queue into ROS messages
         self.create_timer(0.02, self._publish_tick)   # 50 Hz tick
 
         self.get_logger().info(
