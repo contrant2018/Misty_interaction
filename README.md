@@ -1,6 +1,6 @@
 # Misty TTS Node
 
-Basic instructions to get neural TTS running on Misty. for thiss ive created tow nodes that synthisize text to speech, a gTTS node that utilized googles Text to speech and a coqui-TTS.
+Basic instructions to get neural TTS running on Misty. for thiss ive created tow nodes that synthisize text to speech, a gTTS node that utilized googles Text to speech and a coqui-TTS. this node works with Ros2 jazzy.
 
 ---current Nodes---
 
