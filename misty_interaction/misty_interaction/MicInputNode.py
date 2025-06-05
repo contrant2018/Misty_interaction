@@ -2,7 +2,7 @@
 
 import queue, threading, rclpy, pyaudio
 from rclpy.node import Node
-from audio_common_msgs.msg import AudioData    
+from misty_interaction_interfaces.msg import AudioData    
 
 class MicInputNode(Node):
     
@@ -19,7 +19,8 @@ class MicInputNode(Node):
         self.pub = self.create_publisher(AudioData, '/mic_audio', 10)
 
         #  queue + background capture thread
-        self._q = queue.Queue()
+        # this lets us keep running while we wait for a mic input
+        self._q = queue.Queue() 
         self._stop = threading.Event()
         self._thread = threading.Thread(target=self._capture_loop, daemon=True)
         self._thread.start()
@@ -31,16 +32,21 @@ class MicInputNode(Node):
             f"MicInputNode started  rate={self.rate}Hz  chunk={self.chunk}B"
         )
 
-    # ------------------------------------------------------------
+
     def _capture_loop(self):
+
+        #using pyaidio to open up a mic stream so we can listen for an input
         pa = pyaudio.PyAudio()
+
+        #setting up the stream as 16bit signd integer where each chunk is 2 bytes
         stream = pa.open(format=pyaudio.paInt16,
-                         channels=1,
-                         rate=self.rate,
+                         channels=1, #mano auidio
+                         rate=self.rate, #sample rate
                          input=True,
-                         frames_per_buffer=self.chunk)
+                         frames_per_buffer=self.chunk) # amount of audio data comming in
 
         while not self._stop.is_set():
+            #adding our chunk into the que to send to our publisher
             data = stream.read(self.chunk, exception_on_overflow=False)
             self._q.put(data)
 
@@ -48,18 +54,21 @@ class MicInputNode(Node):
         stream.close()
         pa.terminate()
 
-    # ------------------------------------------------------------
     def _publish_tick(self):
         while not self._q.empty():
+            #pull whats next in our que (get_nowait lets us grab the next thing without stopping)
             raw = self._q.get_nowait()
 
+            # create a msg using our custom interface this contains: 
+            # chunk of audio data, a time stamp, and a string for our rate
             msg = AudioData()
-            msg.data = raw                      # ← uint8[] in the message
-            # we piggy-back the sample_rate in the header’s frame_id
+            msg.data = raw 
             msg.header.stamp = self.get_clock().now().to_msg()
             msg.header.frame_id = str(self.rate)
 
             self.pub.publish(msg)
+            ### comment out one other nodes working
+            self.get_logger().info(f"Publishing audio chunk of size {len(raw)} bytes")
 
     # ------------------------------------------------------------
     def destroy_node(self):

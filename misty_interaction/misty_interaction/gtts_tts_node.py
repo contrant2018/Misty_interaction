@@ -37,7 +37,7 @@ class GTTSNode(Node):
         self.create_service(
             SaveMode, 'set_save_mode', self.on_save_mode_request)
         
-        
+        # audio publisher
         self.audio_pub = self.create_publisher(String, '/tts_audio_path', 10)
 
 
@@ -67,6 +67,7 @@ class GTTSNode(Node):
             gTTS(text=text, lang=self.lang).save(str(mp3_path))
             self.get_logger().info(f'Spoke: "{text}" → {mp3_path.name}')
 
+            #publishes audio path
             self.audio_pub.publish(String(data=str(mp3_path)))
 
 

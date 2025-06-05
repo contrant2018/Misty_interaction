@@ -20,6 +20,11 @@ def generate_launch_description():
             cmd=['python3', '-m', 'misty_interaction.SendToMisty'],
             output='screen'
         ),
+
+        ExecuteProcess(
+            cmd=['ros2', 'run', 'misty_interaction', 'mic_input_node'],
+            output='screen'
+        ),
         ###############################
         ### this is for running gTTS ##
         ###############################

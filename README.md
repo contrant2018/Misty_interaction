@@ -19,6 +19,9 @@ both subscribe to text_text to speech and create an mp3 file that creates a fold
 -send_to_misty node: 
 takes the path and name of an audio file then uploads it and plays it using misty studio. in the future i would like to impliment misty's buildt in SDK commands.
 
+-mic_input_node
+takes in a mic input and publishes an audio file to help identify a speaker
+
 ## 1. Prerequisites
 
 * Ubuntu with ROS 2 Jazzy installed
@@ -46,8 +49,13 @@ pip install playsound
 pip install request # in your venv if applicable
 ```
 
+## 4. mic_input_node
 
-## 4. run the nodes
+```bash
+sudo apt install python3-pyaudio portaudio19-dev
+```
+
+## 5. run the nodes
 
 
 ```bash

@@ -13,13 +13,17 @@ find_package(rosidl_default_generators REQUIRED)
 find_package(rclpy REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(builtin_interfaces REQUIRED)
 
+ament_export_dependencies(rosidl_default_runtime)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/SubmitText.srv"
   "srv/SaveMode.srv"
+  "msg/AudioData.msg"
   DEPENDENCIES std_msgs    
 )
+
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
