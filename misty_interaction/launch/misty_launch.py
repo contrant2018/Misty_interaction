@@ -11,10 +11,10 @@ def generate_launch_description():
         ####################################
         ### this is for running coqui-TTS ##
         ####################################
-        ExecuteProcess(
-            cmd=['python3', '-m', 'misty_interaction.TTSNode'],
-            output='screen'
-        ),
+        # ExecuteProcess(
+        #     cmd=['python3', '-m', 'misty_interaction.TTSNode'],
+        #     output='screen'
+        # ),
 
         ExecuteProcess(
             cmd=['python3', '-m', 'misty_interaction.SendToMisty'],
@@ -23,9 +23,9 @@ def generate_launch_description():
         ###############################
         ### this is for running gTTS ##
         ###############################
-    #     ExecuteProcess(
-    #         cmd=['ros2', 'run', 'misty_interaction', 'gtts_tts_node'],
-    #         output = 'screen'
-    #         ),
+        ExecuteProcess(
+            cmd=['ros2', 'run', 'misty_interaction', 'gtts_tts_node'],
+            output = 'screen'
+            ),
      ])
 

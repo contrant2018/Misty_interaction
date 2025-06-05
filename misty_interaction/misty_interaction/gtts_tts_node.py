@@ -5,7 +5,7 @@ from gtts import gTTS
 from datetime import datetime
 from pathlib import Path
 
-from misty_interaction_interfaces.srv import SaveMode      # NEW
+from misty_interaction_interfaces.srv import SaveMode
 
 class GTTSNode(Node):
     """
@@ -15,17 +15,13 @@ class GTTSNode(Node):
     def __init__(self):
         super().__init__('gtts_tts_node')
 
-        # setting up perameter with misty info
-        self.declare_parameter('misty_ip', '10.0.0.151')   ### change to robot IP ###
 
         # setting up a language perameter
         self.declare_parameter('language', 'en')
+        self.lang = self.get_parameter('language').value
 
         # parameter for my service
         self.declare_parameter('cache_and_save', True)
-
-        self.misty_ip = self.get_parameter('misty_ip').value
-        self.lang = self.get_parameter('language').value
 
         self.cache_and_save = self.get_parameter('cache_and_save').value
 
@@ -40,6 +36,10 @@ class GTTSNode(Node):
         
         self.create_service(
             SaveMode, 'set_save_mode', self.on_save_mode_request)
+        
+        
+        self.audio_pub = self.create_publisher(String, '/tts_audio_path', 10)
+
 
         self.get_logger().info(
             f"gTTS node ready. Saving audio to {self.out_dir} (cache={self.cache_and_save}).")
@@ -67,7 +67,8 @@ class GTTSNode(Node):
             gTTS(text=text, lang=self.lang).save(str(mp3_path))
             self.get_logger().info(f'Spoke: "{text}" → {mp3_path.name}')
 
-            self._send_to_misty(mp3_path)
+            self.audio_pub.publish(String(data=str(mp3_path)))
+
 
         except Exception as e:
             self.get_logger().error(f"gTTS error: {e}")
@@ -87,28 +88,7 @@ class GTTSNode(Node):
         resp.accepted = True
 
         return resp
-    
-    def _send_to_misty(self, mp3_path: Path):
 
-        # our current path to mist to play our file
-        url = f"http://{self.misty_ip}/api/audio/play"
-
-        try:
-            #opens the mp3 file to read
-            with open(mp3_path, 'rb') as f:
-
-                #creats a multipart form data thats compatable with misty
-                files = {'file': (mp3_path.name, f, 'audio/mpeg')}
-                r = requests.post(url, files=files, timeout=6)
-
-        # debugging
-            if r.ok:
-                self.get_logger().debug(f"Sent {mp3_path.name} to Misty ({r.status_code})")
-            else:
-                self.get_logger().warning(f"Misty responded {r.status_code}: {r.text}")
-
-        except Exception as e:
-            self.get_logger().error(f"HTTP error while sending audio to Misty: {e}")
 
 def main(args=None):
 
